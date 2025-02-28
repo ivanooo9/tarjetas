@@ -117,7 +117,7 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                               color: Color(0xFF84A05A),
                             ),
                             SizedBox(width: 8),
-                            Text("Nombre: ${category['name']}",
+                            Text("Cancha de ${category['name']}",
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.bold)),
                           ],

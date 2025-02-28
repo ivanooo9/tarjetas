@@ -237,8 +237,7 @@ class Item {
   });
 }
 
-// Tarjeta para mostrar cada ítem en el grid
-class ItemCard extends StatelessWidget {
+class ItemCard extends StatefulWidget {
   final String name;
   final String image;
   final double price;
@@ -260,56 +259,83 @@ class ItemCard extends StatelessWidget {
   });
 
   @override
+  _ItemCardState createState() => _ItemCardState();
+}
+
+class _ItemCardState extends State<ItemCard> {
+  bool _isHovered = false;
+  bool _isTextHovered = false; // Nuevo estado para el hover del texto
+
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.black, // Fondo negro para contraste
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15)),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              name,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: Colors.white),
-            ),
-            SizedBox(height: 8),
-            Image.asset(image, height: 80),
-            SizedBox(height: 8),
-            Text(
-              "Rp $price",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            IconButton(
-              icon: Icon(Icons.add, color: Colors.white),
-              onPressed: () {
-                // Navegar a la página de detalles pasando los datos del ítem
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ItemDetailPage(
-                      name: "Cancha de Soccer 1",
-                      price: 100000,
-                      location: "Ubicación 1",
-                      rating: 4.5,
-                      description: "Cancha de soccer con césped natural.",
-                      owner: "Carlos",
-                      email: "carlos@example.com",
-                      image: 'assets/images/cancha01.jpg', // Nueva propiedad
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        transform: Matrix4.identity()..scale(_isHovered ? 1.05 : 1.0),
+        child: Card(
+          color: Color(0xFF19382F), // Cambia el color de fondo aquí
+          elevation: 5,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.name,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Image.asset(widget.image, height: 80),
+                SizedBox(height: 8),
+                Text(
+                  "Rp ${widget.price}",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                MouseRegion(
+                  onEnter: (_) => setState(() => _isTextHovered = true),
+                  onExit: (_) => setState(() => _isTextHovered = false),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ItemDetailPage(
+                            name: widget.name,
+                            price: widget.price,
+                            location: widget.location,
+                            rating: widget.rating,
+                            description: widget.description,
+                            owner: widget.owner,
+                            email: widget.email,
+                            image: widget.image,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Más Detalles",
+                      style: TextStyle(
+                        color: _isTextHovered ? Colors.amber : Colors.white, // Cambia el color aquí
+                      ),
                     ),
                   ),
-                );
-              },
-            )
-          ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
